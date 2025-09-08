@@ -1,5 +1,6 @@
 CC = gcc
 CFLAGS = -g -fsanitize=address -fno-omit-frame-pointer -O1 -Wall -Werror -Wextra -Iinclude 
+LDFLAGS = -fsanitize=address 
 
 SRC = $(wildcard src/*.c)
 OBJ = $(patsubst src/%.c, build/%.o, $(SRC))
@@ -12,7 +13,7 @@ TARGET = build/mEval
 all: $(TARGET)
 
 $(TARGET): $(OBJ)
-	$(CC) $(OBJ) -o $@
+	$(CC) $(OBJ) -o $@ $(LDFLAGS)
 
 build/%.o: src/%.c $(HEADER)
 	@mkdir -p $(dir $@)
