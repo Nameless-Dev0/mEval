@@ -1,7 +1,7 @@
 #include "tok_stream.h"
+#include "lexer.h"
 #include <stddef.h>
 #include <stdlib.h>
-
 
 stream_t *create_stream(size_t stream_size){
     stream_t *stream = malloc(sizeof(stream_t)); // MUST FREE SECOND
@@ -35,10 +35,19 @@ void stream_destroy(stream_t** stream){
     *stream = NULL;
 }
 
+
+void stream_push_tok(stream_t* stream){
+    return;
+}
+
+void stream_pop_tok(stream_t* stream){
+    return;
+}
+
 const token_t *current_token(const stream_t *stream){
     if (!stream || !(stream->length))
         return NULL;
-    
+
     size_t last_index = stream -> length;
     return &(stream->buffer[last_index]);
 }

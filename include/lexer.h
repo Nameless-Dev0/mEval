@@ -2,37 +2,27 @@
 #define LEXER_H
 #include <stddef.h>
 
-typedef enum token_type token_type_t;
-typedef struct token token_t;
-typedef struct stream stream_t;
-typedef struct lexer lexer_t;
 
-enum token_type{
+typedef enum token_type{
     NUMBER, 
 	PLUS, MINUS, TIMES, DIVIDE, POWER, DOT,
 	LPAREN, RPAREN,
 	SIN, COS, TAN,
 	UNKNOWN, END
-};
+}token_type_t;
 
-struct token{
+typedef struct token{
     const char* lexeme;
-    token_type_t type;
+    enum token_type type;
     union{
         double decimal;
         int integer;
     };
-};
+}token_t;
 
-struct stream{
-    token_t* buffer;
-    size_t length;
-    size_t capacity;
-};
-
-struct lexer{
-    stream_t stream;
+typedef struct lexer{
+    struct stream* stream;
     const char* source;
-};
+}lexer_t;
 
 #endif // LEXER_H
