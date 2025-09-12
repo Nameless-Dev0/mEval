@@ -92,3 +92,6 @@ build/
 
 # Ignore todo file
 TODO.txt
+
+# Ignore resources file
+resources/
