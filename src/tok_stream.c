@@ -1,8 +1,8 @@
-#include "tok_stream.h"
-#include "token.h"
 #include <stddef.h>
 #include <stdlib.h>
-#include <stdbool.h>
+#include "tok_stream.h"
+#include "token.h"
+#include "limits.h"
 
 static inline token_stream_status_t stream_buffer_resize(stream_t* stream){
     if(!(stream) || !(stream->buffer))

@@ -1,10 +1,8 @@
-#include "token.h"
 #include <stdlib.h> // malloc, free
 #include <assert.h> // assert
 #include <stdarg.h> // varidiac function
-#include <stddef.h> // size_t
 #include <stdio.h>  // sprintf
-
+#include "token.h"
 
 token_t* create_token(token_type_t type, const char* lexeme, ...){
     token_t* new_token = malloc(sizeof(token_t));
