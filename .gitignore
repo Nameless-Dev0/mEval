@@ -90,6 +90,9 @@ dkms.conf
 # Ignore build artifacts
 build/
 
+# Ignore test builds
+build_tests/
+
 # Ignore todo file
 TODO.txt
 
