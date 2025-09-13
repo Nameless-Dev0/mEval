@@ -1,14 +1,12 @@
 #ifndef TOK_STREAM_H
 #define TOK_STREAM_H
 
-#define MAX_BUFFER_CAPACITY 4096
-
-#include <stddef.h>
-
 /*
     Token stream is a dymanic array data structure.
     It is the output/return type of the lexer.
 */
+
+#include <stddef.h>
 
 typedef struct token token_t;
 
