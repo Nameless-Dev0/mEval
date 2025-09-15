@@ -21,10 +21,9 @@ token_t* create_token(token_type_t type, const char* lexeme, ...){
     return new_token;
 }
 
-void free_token(token_t** token){
+void free_token(token_t* token){ // causes memory leak don't forget 
     assert(token);
-    free(*token);
-    *token = NULL;
+    free(token);
 }
 
 static inline const char* token_type_to_string(token_type_t type){

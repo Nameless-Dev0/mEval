@@ -150,6 +150,8 @@ void lex_expression(lexer_t* lexer){
             advance(lexer);
         }
         status = stream_append_token(lexer->stream, token);
+        free_token(token);
+
         if(status != SUCCESS)
             fprintf(stderr, "Appending token to stream failed. Error: %d\n", (int)status);
     }

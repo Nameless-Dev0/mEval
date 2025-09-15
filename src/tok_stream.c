@@ -44,7 +44,9 @@ stream_t *create_stream(size_t stream_size){
 }
 
 void stream_destroy(stream_t *stream){
-    if (!stream) return;
+    if (!stream) 
+        return;
+
     free(stream->buffer);
     free(stream);
 }

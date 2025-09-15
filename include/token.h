@@ -18,7 +18,7 @@ typedef struct token{
 }token_t;
 
 token_t* create_token(token_type_t type, const char* lexeme, ...);
-void free_token(token_t** token); // not used, going to keep it for now.
+void free_token(token_t* token); // not used, going to keep it for now.
 void print_token(const token_t* token);
 
 #endif // TOKEN_H
