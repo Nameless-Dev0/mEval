@@ -7,6 +7,7 @@
 
 #include "repl.h"
 #include "lexer.h"
+#include "tok_stream.h"
 #include "limits.h"
 
 static inline void show_indicator(void){
@@ -35,11 +36,17 @@ void repl_loop(){
         if(read_size > 0 && line[read_size - 1] == '\n')
             line[read_size - 1] = '\0';
         
-        // Call the lexer
+        lexer_t lexer;
+        lexer_init(&lexer, line, read_size);
+        lex_expression(&lexer);
+
+        print_stream(lexer.stream);
+
+        lexer_reset(&lexer);
+
         // Call the parser
         // Call the evaluator
 
-        printf("Result: %s\n", line);
         show_indicator();
     }
 
