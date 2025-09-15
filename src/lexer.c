@@ -46,6 +46,8 @@ static token_t* tokenize_symbol(lexer_t* lexer){
       case '^': token = create_token(POWER,  lexeme); break;
       default: break;
     }
+    if(!token)
+        lexer->current = lexer->start;
     return token;
 }
 
@@ -66,6 +68,9 @@ static token_t* tokenize_math_func(lexer_t* lexer){
         token = create_token(COS, buffer);
     else if(!strncmp(buffer, "tan", 3))
         token = create_token(TAN, buffer);
+
+    if(!token)
+        lexer->current = lexer->start;
 
     return token;
 }
@@ -132,7 +137,7 @@ void lex_expression(lexer_t* lexer){
     while(!is_at_end(lexer)){
         token_t* token = NULL;
         token_stream_status_t status;
-        
+
         token = tokenize_number(lexer);
         if(!token)
             token = tokenize_symbol(lexer);
