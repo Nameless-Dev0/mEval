@@ -5,19 +5,20 @@
 
 typedef enum token_type{
     NUMBER, 
-	PLUS, MINUS, TIMES, DIVIDE, POWER, DOT,
+	PLUS, MINUS, TIMES, DIVIDE, POWER,
 	LPAREN, RPAREN,
 	SIN, COS, TAN,
 	UNKNOWN, END
 }token_type_t;
 
 typedef struct token{
-    char lexeme[MAX_LEXEME_LENGTH];
+    char lexeme[MAX_LEXEME_LENGTH]; // must be null-terminated
     token_type_t type;
     double value;
 }token_t;
 
 token_t* create_token(token_type_t type, const char* lexeme, ...);
 void free_token(token_t** token); // not used, going to keep it for now.
+void print_token(const token_t* token);
 
 #endif // TOKEN_H

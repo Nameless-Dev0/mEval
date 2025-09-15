@@ -26,3 +26,34 @@ void free_token(token_t** token){
     free(*token);
     *token = NULL;
 }
+
+static inline const char* token_type_to_string(token_type_t type){
+    switch (type) {
+        case NUMBER: return "NUMBER";
+        case PLUS:   return "PLUS";
+        case MINUS:  return "MINUS";
+        case TIMES:  return "TIMES";
+        case DIVIDE: return "DIVIDE";
+        case POWER:  return "POWER";
+        case LPAREN: return "LPAREN";
+        case RPAREN: return "RPAREN";
+        case SIN:    return "SIN";
+        case COS:    return "COS";
+        case TAN:    return "TAN";
+        case UNKNOWN:return "UNKNOWN";
+        case END:    return "END";
+        default:     return "CONVERSION FAILED";
+    }
+}
+
+void print_token(const token_t* token){
+    if(!token)
+        return;
+        
+    printf(
+        "TOKEN: { %s | %s | %lf }\n",
+        token->lexeme,
+        token_type_to_string(token->type),
+        token->value
+    );
+}
