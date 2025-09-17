@@ -1,7 +1,7 @@
 #include "lexer.h"
 #include "token.h"
 #include "tok_stream.h"
-#include "limits.h"
+#include "lex_limits.h"
 
 #include <string.h>
 #include <ctype.h>
@@ -18,7 +18,6 @@ static token_t* tokenize_math_func(lexer_t* lexer);
 static inline char advance(lexer_t* lexer){
     return (lexer->source[lexer->current++]);
 }
-
 static inline char peek(lexer_t* lexer){
     return (lexer->source[lexer->current]);
 }
@@ -77,44 +76,41 @@ static token_t* tokenize_math_func(lexer_t* lexer){
 
 static token_t* tokenize_number(lexer_t* lexer){
     lexer->start = lexer->current;
+    bool dot_found = false;
 
-    if(peek(lexer) == '.' && isdigit(peek_next(lexer))) // leading dot
-        advance(lexer);
-
-    while(isdigit(peek(lexer))){
+    if(peek(lexer) == '.'){
+        dot_found = true;
+        if(!isdigit(peek_next(lexer)))
+            return NULL;
         advance(lexer);
     }
-    
-    if(peek(lexer) == '.' && isdigit(peek_next(lexer))){
+
+    while(isdigit(peek(lexer)))
         advance(lexer);
-        while(isdigit(peek(lexer)))
+    
+    if(peek(lexer) == '.' && isdigit(peek_next(lexer)) && !dot_found){
+        advance(lexer);
+        while(isdigit(peek(lexer)))     
             advance(lexer);
     }
     
     size_t lexeme_length = (lexer->current) - (lexer->start);
     char lexeme[MAX_LEXEME_LENGTH]; 
-
     if(!lexeme_length)
         return NULL;
-
     if(lexeme_length >=  MAX_LEXEME_LENGTH){
         fprintf(stderr,"lexeme length overflow... treated as UNKNOWN\n");
         return NULL; // maybe assert idk yet
     }
-
     strncpy(lexeme, &(lexer->source[lexer->start]),lexeme_length);
     lexeme[lexeme_length] = '\0';
 
     double value  = strtod(lexeme, NULL);
-
     if(lexeme_length == 1 && lexeme[0] == '.') // dot only
         return NULL;
     
     token_t* ret_token = create_token(NUMBER, lexeme, value);
-    if(!ret_token){
-        fprintf(stderr, "number token creation failed\n"); // proper error handling tbd
-        assert(ret_token);
-    }
+    assert(ret_token); // number token creation failed
     return ret_token;
 }
 
@@ -143,12 +139,12 @@ void lex_expression(lexer_t* lexer){
             token = tokenize_symbol(lexer);
         if(!token)
             token = tokenize_math_func(lexer);
-
         if (!token){
             char unknown_symbol[2] = {peek(lexer),'\0'};
             token = create_token(UNKNOWN, unknown_symbol);
             advance(lexer);
         }
+
         status = stream_append_token(lexer->stream, token);
         free_token(token);
 
@@ -167,4 +163,14 @@ void lexer_reset(lexer_t* lexer){
     lexer->current = 0;
 }
 
+inline const token_t* lex_peek(const lexer_t* lexer){
+    return stream_curr_token(lexer->stream);
+}
 
+inline const token_t* lex_peek_next(const lexer_t* lexer){
+    return stream_next_token(lexer->stream);
+}
+
+inline token_stream_status_t lex_advance(lexer_t* lexer){
+    return stream_iterate_next(lexer->stream);
+}
