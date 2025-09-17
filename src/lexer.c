@@ -1,15 +1,14 @@
-#include "lexer.h"
-#include "token.h"
-#include "tok_stream.h"
-#include "lex_limits.h"
-
 #include <string.h>
 #include <ctype.h>
-#include <stddef.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
+
+#include "lexer.h"
+#include "token.h"
+#include "tok_stream.h"
+#include "lex_limits.h"
 
 static token_t* tokenize_number(lexer_t* lexer);
 static token_t* tokenize_symbol(lexer_t* lexer); 

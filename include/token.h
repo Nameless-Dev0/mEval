@@ -1,7 +1,7 @@
 #ifndef TOKEN_H
 #define TOKEN_H
 
-#define MAX_LEXEME_LENGTH 128
+#include "lex_limits.h"
 
 typedef enum token_type{
     NUMBER, 
@@ -18,7 +18,8 @@ typedef struct token{
 }token_t;
 
 token_t* create_token(token_type_t type, const char* lexeme, ...);
-void free_token(token_t* token); // not used, going to keep it for now.
+void free_token(token_t* token);
 void print_token(const token_t* token);
+void stringize_token(const token_t* token, char* token_string);
 
 #endif // TOKEN_H

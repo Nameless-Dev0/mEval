@@ -7,8 +7,8 @@
 
 #include "repl.h"
 #include "lexer.h"
-#include "tok_stream.h"
-#include "limits.h"
+#include "tok_stream.h" // keeping it for now to display token stream 
+#include "lex_limits.h"
 
 static inline void show_indicator(void){
     printf(">> ");
@@ -19,7 +19,7 @@ static inline void show_start(void){
     printf("Welcome to mEval, (Ctrl+D to exit):\n");
 }
 
-void repl_loop(){
+void repl_loop(void){
     char* line = NULL;
     size_t line_buffer_length = 0;
     ssize_t read_size = 0;
@@ -43,8 +43,8 @@ void repl_loop(){
         print_stream(lexer.stream);
 
         lexer_reset(&lexer);
-
-        // Call the parser
+        
+        // Call the parser 
         // Call the evaluator
 
         show_indicator();

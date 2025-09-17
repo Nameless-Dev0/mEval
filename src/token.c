@@ -1,7 +1,7 @@
 #include <stdlib.h> // malloc, free
 #include <assert.h> // assert
 #include <stdarg.h> // varidiac function
-#include <stdio.h>  // sprintf
+#include <stdio.h>  // snprintf
 #include "token.h"
 
 token_t* create_token(token_type_t type, const char* lexeme, ...){
@@ -12,6 +12,8 @@ token_t* create_token(token_type_t type, const char* lexeme, ...){
     new_token->type = type;
     snprintf(new_token->lexeme, MAX_LEXEME_LENGTH, "%s", lexeme);
 
+    new_token->value = 0;
+    
     va_list args;
     va_start(args, lexeme);
     if(type == NUMBER)
@@ -56,3 +58,4 @@ void print_token(const token_t* token){
         token->value
     );
 }
+
