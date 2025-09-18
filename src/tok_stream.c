@@ -7,23 +7,19 @@
 
 static inline token_stream_status_t stream_buffer_resize(stream_t* stream);
 
-stream_t *create_stream(size_t stream_size){
-    stream_t *stream = malloc(sizeof(stream_t)); // free second
+stream_t *create_stream(void){
 
+    stream_t *stream = malloc(sizeof(stream_t)); // free second    
     if(!stream)
         return NULL;
-    if(stream_size == 0 || stream_size > MAX_BUFFER_CAPACITY){
-        free(stream);
-        return NULL;
-    }
 
-    stream->buffer = calloc(stream_size, sizeof(token_t)); // free first
+    stream->buffer = calloc(TOKEN_CAPACITY, sizeof(token_t)); // free first
     if(!(stream->buffer)){
         free(stream);
         return NULL;
     }
 
-    stream->capacity = stream_size;
+    stream->capacity = TOKEN_CAPACITY;
     stream->length = 0;
     stream->iterator = 0;
     return stream;
@@ -40,7 +36,7 @@ static inline token_stream_status_t stream_buffer_resize(stream_t* stream){
     STREAM_VALID_CHECK;
 
     size_t new_capacity = (stream->capacity) * 2;
-    if(new_capacity > MAX_BUFFER_CAPACITY)
+    if(new_capacity > MAX_TOKEN_CAPACITY)
         return BUFFER_MAX_EXCEEDED;
 
     token_t* temp = realloc((stream->buffer), (sizeof(token_t) * new_capacity));

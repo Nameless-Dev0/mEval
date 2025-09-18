@@ -27,7 +27,7 @@ typedef struct stream{
     struct token* buffer;
 }stream_t;
 
-stream_t* create_stream(size_t stream_size);
+stream_t* create_stream(void); // initial capacity is 64 tokens
 void stream_destroy(stream_t* stream);
 
 const token_t* stream_curr_token(const stream_t* stream);
