@@ -37,7 +37,7 @@ void repl_loop(void){
             line[read_size - 1] = '\0';
         
         lexer_t lexer;
-        lexer_init(&lexer, line, read_size);
+        lexer_init(&lexer, line);
         lex_expression(&lexer);
 
         print_stream(lexer.stream);
