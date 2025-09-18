@@ -113,13 +113,13 @@ static token_t* tokenize_number(lexer_t* lexer){
     return ret_token;
 }
 
-void lexer_init(lexer_t* lexer, const char* line, size_t line_length){
+void lexer_init(lexer_t* lexer, const char* line){
     if(!lexer)
         return;
     lexer->source = line;
     lexer->start = 0;
     lexer->current = 0;
-    lexer->stream = create_stream(line_length);
+    lexer->stream = create_stream();
 }
 
 void lex_expression(lexer_t* lexer){
@@ -130,6 +130,12 @@ void lex_expression(lexer_t* lexer){
     }
 
     while(!is_at_end(lexer)){
+
+        while(peek(lexer) == ' ')
+            advance(lexer);
+        if (is_at_end(lexer))
+            break;
+
         token_t* token = NULL;
         token_stream_status_t status;
 

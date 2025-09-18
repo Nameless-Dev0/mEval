@@ -1,8 +1,6 @@
 #ifndef LEXER_H
 #define LEXER_H
 
-#include <stddef.h>
-
 typedef struct stream stream_t;
 typedef struct token token_t;
 typedef enum token_stream_status token_stream_status_t;
@@ -14,7 +12,7 @@ typedef struct lexer{
     size_t current;
 }lexer_t;
 
-void lexer_init(lexer_t* lexer, const char* line, size_t line_length);
+void lexer_init(lexer_t* lexer, const char* line);
 void lexer_reset(lexer_t* lexer);
 void lex_expression(lexer_t* lexer);
 
