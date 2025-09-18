@@ -3,7 +3,9 @@
 
 // didn't want to include tok_stream.h in the repl.c
 
-#define MAX_BUFFER_CAPACITY 1024
+#define TOKEN_CAPACITY 64
+#define MAX_TOKEN_CAPACITY 1024
+
 #define MAX_LINE_LENGTH 1024
 #define MAX_LEXEME_LENGTH 128
 
