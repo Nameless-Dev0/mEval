@@ -94,7 +94,7 @@ static token_t* tokenize_number(lexer_t* lexer){
     }
     
     size_t lexeme_length = (lexer->current) - (lexer->start);
-    char lexeme[MAX_LEXEME_LENGTH]; 
+    char lexeme[MAX_LEXEME_LENGTH];
     if(!lexeme_length)
         return NULL;
     if(lexeme_length >=  MAX_LEXEME_LENGTH){
@@ -152,10 +152,16 @@ void lex_expression(lexer_t* lexer){
 
         status = stream_append_token(lexer->stream, token);
         free_token(token);
-
         if(status != SUCCESS)
             fprintf(stderr, "Appending token to stream failed. Error: %d\n", (int)status);
     }
+        token_t* last_token = NULL;
+        last_token = create_token(END,"");
+        token_stream_status_t last_tok_status = stream_append_token(lexer->stream, last_token);
+        free_token(last_token);
+        if(last_tok_status != SUCCESS)
+            fprintf(stderr, "Appending END token to stream failed. Error: %d\n", (int)last_tok_status);
+        
 }
 
 void lexer_reset(lexer_t* lexer){
