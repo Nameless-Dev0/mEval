@@ -1,26 +1,3 @@
-/*
-
-Expression     Test Case Name
------------    ------------------------
-"1+2"          addition_simple
-"(3*4)"        multiplication_paren
-"cos(0)"       trig_cos_zero
-"sin(90)"      trig_sin_ninety
-"5-3"          subtraction_simple
-"2^3"          exponentiation_simple
-"tan(45)"      trig_tan_fortyfive
-"1+2*3"        precedence_mixed_ops
-"(4/2)-1"      division_and_subtraction
-"3.14+2.71"    addition_floats
-"(1+(2*3))"    nested_parentheses
-"42"           single_number
-"  1 + 2  "    whitespace_handling
-"1$2"          invalid_character
-"(1+2"         unbalanced_parenthesis
-""             empty_input
-
-*/
-
 #include <stddef.h>
 #include <string.h>
 #include <stdio.h>
