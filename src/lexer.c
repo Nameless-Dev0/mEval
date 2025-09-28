@@ -3,7 +3,6 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <assert.h>
 
 #include "lexer.h"
 #include "token.h"
@@ -14,14 +13,14 @@ static token_t* tokenize_number(lexer_t* lexer);
 static token_t* tokenize_symbol(lexer_t* lexer); 
 static token_t* tokenize_math_func(lexer_t* lexer);
 
-static inline char advance(lexer_t* lexer){
+static char advance(lexer_t* lexer){
     return (lexer->source[lexer->current++]);
 }
-static inline char peek(lexer_t* lexer){
+static char peek(lexer_t* lexer){
     return (lexer->source[lexer->current]);
 }
 
-static inline char peek_next(lexer_t* lexer){
+static char peek_next(lexer_t* lexer){
     return (lexer->source[(lexer->current) + 1]);
 }
 
@@ -39,7 +38,7 @@ static token_t* tokenize_symbol(lexer_t* lexer){
       case ')': token = create_token(RPAREN, lexeme); break;
       case '+': token = create_token(PLUS,   lexeme); break;
       case '-': token = create_token(MINUS,  lexeme); break;
-      case '*': token = create_token(TIMES,  lexeme); break;
+      case '*': token = create_token(MULTIPLY,  lexeme); break;
       case '/': token = create_token(DIVIDE, lexeme); break;
       case '^': token = create_token(POWER,  lexeme); break;
       default: break;
@@ -89,7 +88,7 @@ static token_t* tokenize_number(lexer_t* lexer){
     
     if(peek(lexer) == '.' && isdigit(peek_next(lexer)) && !dot_found){
         advance(lexer);
-        while(isdigit(peek(lexer)))     
+        while(isdigit(peek(lexer)))
             advance(lexer);
     }
     
@@ -101,13 +100,11 @@ static token_t* tokenize_number(lexer_t* lexer){
         fprintf(stderr,"lexeme length overflow... treated as UNKNOWN\n");
         return NULL; // maybe assert idk yet
     }
+    
     strncpy(lexeme, &(lexer->source[lexer->start]),lexeme_length);
     lexeme[lexeme_length] = '\0';
-
     double value  = strtod(lexeme, NULL);
-    if(lexeme_length == 1 && lexeme[0] == '.') // dot only
-        return NULL;
-    
+
     token_t* ret_token = create_token(NUMBER, lexeme, value);
     assert(ret_token); // number token creation failed
     return ret_token;
@@ -125,8 +122,8 @@ void lexer_init(lexer_t* lexer, const char* line){
 void lex_expression(lexer_t* lexer){
     
     if(!(lexer->stream)){
-        fprintf(stderr, "stream creation failed\n");
-        assert(lexer->stream);
+        fprintf(stderr, "stream null error\n");
+        exit(EXIT_FAILURE);
     }
 
     while(!is_at_end(lexer)){
@@ -155,13 +152,13 @@ void lex_expression(lexer_t* lexer){
         if(status != SUCCESS)
             fprintf(stderr, "Appending token to stream failed. Error: %d\n", (int)status);
     }
-        token_t* last_token = NULL;
-        last_token = create_token(END,"");
-        token_stream_status_t last_tok_status = stream_append_token(lexer->stream, last_token);
-        free_token(last_token);
-        if(last_tok_status != SUCCESS)
-            fprintf(stderr, "Appending END token to stream failed. Error: %d\n", (int)last_tok_status);
-        
+
+    token_t* last_token = NULL;
+    last_token = create_token(END,"");
+    token_stream_status_t last_tok_status = stream_append_token(lexer->stream, last_token);
+    free_token(last_token);
+    if(last_tok_status != SUCCESS)
+        fprintf(stderr, "Appending END token to stream failed. Error: %d\n", (int)last_tok_status);
 }
 
 void lexer_reset(lexer_t* lexer){
@@ -174,14 +171,14 @@ void lexer_reset(lexer_t* lexer){
     lexer->current = 0;
 }
 
-inline const token_t* lex_peek(const lexer_t* lexer){
+const token_t* lex_peek(const lexer_t* lexer){
     return stream_curr_token(lexer->stream);
 }
 
-inline const token_t* lex_peek_next(const lexer_t* lexer){
+const token_t* lex_peek_next(const lexer_t* lexer){
     return stream_next_token(lexer->stream);
 }
 
-inline token_stream_status_t lex_advance(lexer_t* lexer){
+token_stream_status_t lex_advance(lexer_t* lexer){
     return stream_iterate_next(lexer->stream);
 }
