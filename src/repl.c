@@ -10,13 +10,13 @@
 #include "tok_stream.h" // keeping it for now to display token stream 
 #include "lex_limits.h"
 
-static inline void show_indicator(void){
-    printf(">> ");
-    fflush(stdout);
+static void show_start(void){
+    printf("Welcome to mEval, (Ctrl+D to exit):\n");
 }
 
-static inline void show_start(void){
-    printf("Welcome to mEval, (Ctrl+D to exit):\n");
+static void show_indicator(void){
+    printf(">> ");
+    fflush(stdout);
 }
 
 void repl_loop(void){
@@ -42,11 +42,11 @@ void repl_loop(void){
 
         print_stream(lexer.stream);
 
+        // TODO: parse
+        // evaluate
+
         lexer_reset(&lexer);
         
-        // Call the parser 
-        // Call the evaluator
-
         show_indicator();
     }
 
