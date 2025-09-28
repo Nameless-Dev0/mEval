@@ -6,8 +6,6 @@
     It is the output/return type of the lexer.
 */
 
-#include <stddef.h>
-    
 #define STREAM_VALID_CHECK assert(stream && (stream->buffer))
 
 typedef struct token token_t;
