@@ -1,8 +1,6 @@
 #include <stddef.h>
 #include <string.h>
 #include <stdio.h>
-#include <math.h>
-
 
 #include "test.h"
 #include "lexer.h"
@@ -11,22 +9,22 @@
 #include "lex_limits.h"
 
 static expected_lexer_output_t tests[TESTS_COUNT] = {
-    {"1+2",        {{1.0, NUMBER, "1"}, {0.0, PLUS, "+"}, {2.0, NUMBER, "2"}}, 3},
-    {"(3*4)",      {{0.0, LPAREN, "("}, {3.0, NUMBER, "3"}, {0.0, TIMES, "*"}, {4.0, NUMBER, "4"}, {0.0, RPAREN, ")"}}, 5},
-    {"cos(0)",     {{0.0, COS, "cos"}, {0.0, LPAREN, "("}, {0.0, NUMBER, "0"}, {0.0, RPAREN, ")"}}, 4},
-    {"sin(90)",    {{0.0, SIN, "sin"}, {0.0, LPAREN, "("}, {90.0, NUMBER, "90"}, {0.0, RPAREN, ")"}}, 4},
-    {"5-3",        {{5.0, NUMBER, "5"}, {0.0, MINUS, "-"}, {3.0, NUMBER, "3"}}, 3},
-    {"2^3",        {{2.0, NUMBER, "2"}, {0.0, POWER, "^"}, {3.0, NUMBER, "3"}}, 3},
-    {"tan(45)",    {{0.0, TAN, "tan"}, {0.0, LPAREN, "("}, {45.0, NUMBER, "45"}, {0.0, RPAREN, ")"}}, 4},
-    {"1+2*3",      {{1.0, NUMBER, "1"}, {0.0, PLUS, "+"}, {2.0, NUMBER, "2"}, {0.0, TIMES, "*"}, {3.0, NUMBER, "3"}}, 5},
-    {"(4/2)-1",    {{0.0, LPAREN, "("}, {4.0, NUMBER, "4"}, {0.0, DIVIDE, "/"}, {2.0, NUMBER, "2"}, {0.0, RPAREN, ")"}, {0.0, MINUS, "-"}, {1.0, NUMBER, "1"}}, 7},
-    {"3.14+2.71",  {{3.14, NUMBER, "3.14"}, {0.0, PLUS, "+"}, {2.71, NUMBER, "2.71"}}, 3},
-    {"(1+(2*3))",  {{0.0, LPAREN, "("}, {1.0, NUMBER, "1"}, {0.0, PLUS, "+"}, {0.0, LPAREN, "("}, {2.0, NUMBER, "2"}, {0.0, TIMES, "*"}, {3.0, NUMBER, "3"}, {0.0, RPAREN, ")"}, {0.0, RPAREN, ")"}}, 9},
-    {"42",         {{42.0, NUMBER, "42"}}, 1},
-    {"  1 + 2  ",  {{1.0, NUMBER, "1"}, {0.0, PLUS, "+"}, {2.0, NUMBER, "2"}}, 3},
-    {"1$2",        {{1.0, NUMBER, "1"}, {0.0, UNKNOWN, "$"}, {2.0, NUMBER, "2"}}, 3},
-    {"(1+2",       {{0.0, LPAREN, "("}, {1.0, NUMBER, "1"}, {0.0, PLUS, "+"}, {2.0, NUMBER, "2"}}, 4},
-    {"",           {}, 0}
+    {"1+2",        {{1.0, NUMBER, "1"},     {0.0, PLUS, "+"},   {2.0, NUMBER, "2"},     {0.0, END, ""}}, 4},
+    {"(3*4)",      {{0.0, LPAREN, "("},     {3.0, NUMBER, "3"}, {0.0, MULTIPLY, "*"},      {4.0, NUMBER, "4"},  {0.0, RPAREN, ")"}, {0.0, END, ""}}, 6},
+    {"cos(0)",     {{0.0, COS, "cos"},      {0.0, LPAREN, "("}, {0.0, NUMBER, "0"},     {0.0, RPAREN, ")"},  {0.0, END, ""}}, 5},
+    {"sin(90)",    {{0.0, SIN, "sin"},      {0.0, LPAREN, "("}, {90.0, NUMBER, "90"},   {0.0, RPAREN, ")"},  {0.0, END, ""}}, 5},
+    {"5-3",        {{5.0, NUMBER, "5"},     {0.0, MINUS, "-"},  {3.0, NUMBER, "3"},     {0.0, END, ""}}, 4},
+    {"2^3",        {{2.0, NUMBER, "2"},     {0.0, POWER, "^"},  {3.0, NUMBER, "3"},     {0.0, END, ""}}, 4},
+    {"tan(45)",    {{0.0, TAN, "tan"},      {0.0, LPAREN, "("}, {45.0, NUMBER, "45"},   {0.0, RPAREN, ")"},  {0.0, END, ""}}, 5},
+    {"1+2*3",      {{1.0, NUMBER, "1"},     {0.0, PLUS, "+"},   {2.0, NUMBER, "2"},     {0.0, MULTIPLY, "*"},   {3.0, NUMBER, "3"}, {0.0, END, ""}}, 6},
+    {"(4/2)-1",    {{0.0, LPAREN, "("},     {4.0, NUMBER, "4"}, {0.0, DIVIDE, "/"},     {2.0, NUMBER, "2"},  {0.0, RPAREN, ")"}, {0.0, MINUS, "-"}, {1.0, NUMBER, "1"}, {0.0, END, ""}}, 8},
+    {"3.14+2.71",  {{3.14, NUMBER, "3.14"}, {0.0, PLUS, "+"},   {2.71, NUMBER, "2.71"}, {0.0, END, ""}}, 4},
+    {"(1+(2*3))",  {{0.0, LPAREN, "("},     {1.0, NUMBER, "1"}, {0.0, PLUS, "+"},       {0.0, LPAREN, "("},  {2.0, NUMBER, "2"}, {0.0, MULTIPLY, "*"}, {3.0, NUMBER, "3"}, {0.0, RPAREN, ")"}, {0.0, RPAREN, ")"}, {0.0, END, ""}}, 10},
+    {"42",         {{42.0, NUMBER, "42"},   {0.0, END, ""}}, 2},
+    {"  1 + 2  ",  {{1.0, NUMBER, "1"},     {0.0, PLUS, "+"},   {2.0, NUMBER, "2"}, {0.0, END, ""}}, 4},
+    {"1$2",        {{1.0, NUMBER, "1"},     {0.0, UNKNOWN, "$"},{2.0, NUMBER, "2"}, {0.0, END, ""}}, 4},
+    {"(1+2",       {{0.0, LPAREN, "("},     {1.0, NUMBER, "1"}, {0.0, PLUS, "+"}, {2.0, NUMBER, "2"}, {0.0, END, ""}}, 5},
+    {"",           {{0.0, END, ""}}, 1}
 };
 
 static int check_lexer_output(stream_t* lexer_output, expected_token_t* expected_out, size_t expected_out_length){
@@ -37,7 +35,6 @@ static int check_lexer_output(stream_t* lexer_output, expected_token_t* expected
         if(
             lexer_output->buffer[i].type != expected_out[i].expected_type ||
             strcmp(lexer_output->buffer[i].lexeme, expected_out[i].expected_lexeme) != 0||
-            //fabs(lexer_output->buffer[i].value - expected_out[i].value) > 1e-9
             lexer_output->buffer[i].value != expected_out[i].value
         ){return -1;}
     }
