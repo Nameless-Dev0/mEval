@@ -1,6 +1,8 @@
 #ifndef LEXER_H
 #define LEXER_H
 
+#include <stddef.h>
+
 typedef struct stream stream_t;
 typedef struct token token_t;
 typedef enum token_stream_status token_stream_status_t;
