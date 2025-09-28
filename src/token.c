@@ -23,7 +23,7 @@ token_t* create_token(token_type_t type, const char* lexeme, ...){
     return new_token;
 }
 
-void free_token(token_t* token){ // causes memory leak don't forget 
+void free_token(token_t* token){ // dont forget to call
     assert(token);
     free(token);
 }
@@ -33,7 +33,7 @@ static inline const char* token_type_to_string(token_type_t type){
         case NUMBER: return "NUMBER";
         case PLUS:   return "PLUS";
         case MINUS:  return "MINUS";
-        case TIMES:  return "TIMES";
+        case MULTIPLY:  return "MULTIPLY";
         case DIVIDE: return "DIVIDE";
         case POWER:  return "POWER";
         case LPAREN: return "LPAREN";
