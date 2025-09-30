@@ -6,7 +6,7 @@
 /*
     The AST is implemented as binary tree.
     
-    Nodes don't reference tokens they make copies, since the having the
+    Nodes don't reference tokens they make deep copies, since the having the
     nodes of a heap allocated tree point to a heap allocated token stream
     would be a nightmare to debug.
 
@@ -26,6 +26,7 @@ typedef struct ast{
 
 void create_AST(ast_t* root);
 void destroy_AST(ast_t* root);
+void recursive_destroy_node(ast_node_t* node);
 
 ast_node_t* create_number_node(const token_t* token);
 ast_node_t* create_negative_node(ast_node_t* child);

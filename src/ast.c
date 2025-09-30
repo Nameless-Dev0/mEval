@@ -4,18 +4,15 @@
 #include <stdlib.h>
 #include <bsd/string.h>
 
-// TODO: convert token shallow copies to deep copies.
-
-static void destroy_node(ast_node_t* node);
 static ast_node_t* create_node(void);
 static ast_node_t* init_binary_node(ast_node_t* left, ast_node_t* right);
 static ast_node_t* init_unary_node(ast_node_t* right);
 
-static void destroy_node(ast_node_t* node){
+void recursive_destroy_node(ast_node_t* node){
     if(!node)
         return;
-    destroy_node(node->left);
-    destroy_node(node->right);
+    recursive_destroy_node(node->left);
+    recursive_destroy_node(node->right);
     free(node);
 }
 
@@ -51,8 +48,9 @@ void create_AST(ast_t* tree){
 void destroy_AST(ast_t* tree){
     if(!tree)
         return;
-    destroy_node(tree->root);
+    recursive_destroy_node(tree->root);
     tree->root = NULL;
+    free(tree);
 }
 
 ast_node_t* create_number_node(const token_t* tok){
