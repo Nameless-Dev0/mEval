@@ -63,21 +63,14 @@ token_stream_status_t stream_append_token(stream_t* stream, const token_t* new_t
     return SUCCESS;
 }
 
-inline const token_t* stream_curr_token(const stream_t* stream){
+token_t* stream_curr_token(const stream_t* stream){
     STREAM_VALID_CHECK;
     if(stream->length == 0 || stream->iterator >= stream->length)
         return NULL;
     return &(stream->buffer[stream->iterator]);
 }
 
-inline const token_t* stream_next_token(const stream_t* stream){
-    STREAM_VALID_CHECK;
-    if(stream->length == 0 || stream->iterator + 1 >= stream->length)
-        return NULL;
-    return &(stream->buffer[(stream->iterator)+ 1]);
-}
-
-inline token_stream_status_t stream_iterate_next(stream_t* stream){
+token_stream_status_t stream_iterate_next(stream_t* stream){
     STREAM_VALID_CHECK;
     if(stream->iterator + 1 >= stream->length)
         return NO_NEXT_TOKEN;
