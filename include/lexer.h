@@ -18,8 +18,8 @@ void lexer_init(lexer_t* lexer, const char* line);
 void lexer_reset(lexer_t* lexer);
 void lex_expression(lexer_t* lexer);
 
-const token_t* lex_peek(const lexer_t* lexer);
-const token_t* lex_peek_next(const lexer_t* lexer);
+token_t* lex_peek(const lexer_t* lexer);
+token_t*  lex_next(lexer_t* lexer);
 token_stream_status_t lex_advance(lexer_t* lexer);
 
 #endif // LEXER_H

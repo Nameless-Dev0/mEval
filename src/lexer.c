@@ -106,7 +106,10 @@ static token_t* tokenize_number(lexer_t* lexer){
     double value  = strtod(lexeme, NULL);
 
     token_t* ret_token = create_token(NUMBER, lexeme, value);
-    assert(ret_token); // number token creation failed
+    if(!ret_token){
+        fprintf(stderr, "lexer error: number token creation failed");
+        exit(EXIT_FAILURE);
+    } 
     return ret_token;
 }
 
@@ -171,14 +174,18 @@ void lexer_reset(lexer_t* lexer){
     lexer->current = 0;
 }
 
-const token_t* lex_peek(const lexer_t* lexer){
+token_t* lex_peek(const lexer_t* lexer){
     return stream_curr_token(lexer->stream);
-}
-
-const token_t* lex_peek_next(const lexer_t* lexer){
-    return stream_next_token(lexer->stream);
 }
 
 token_stream_status_t lex_advance(lexer_t* lexer){
     return stream_iterate_next(lexer->stream);
 }
+
+token_t* lex_next(lexer_t* lexer){
+    token_stream_status_t status = lex_advance(lexer);
+    if(status == NO_NEXT_TOKEN)
+        return NULL;
+    return lex_peek(lexer);
+}
+
