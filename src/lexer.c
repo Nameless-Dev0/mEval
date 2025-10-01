@@ -107,7 +107,7 @@ static token_t* tokenize_number(lexer_t* lexer){
 
     token_t* ret_token = create_token(NUMBER, lexeme, value);
     if(!ret_token){
-        fprintf(stderr, "lexer error: number token creation failed");
+        fprintf(stderr, "(lexer) fatal error: number token creation failed... exiting");
         exit(EXIT_FAILURE);
     } 
     return ret_token;
@@ -125,7 +125,7 @@ void lexer_init(lexer_t* lexer, const char* line){
 void lex_expression(lexer_t* lexer){
     
     if(!(lexer->stream)){
-        fprintf(stderr, "stream null error\n");
+        fprintf(stderr, "(lexer) fatal error: stream null error... exiting\n");
         exit(EXIT_FAILURE);
     }
 
