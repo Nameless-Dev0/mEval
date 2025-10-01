@@ -56,20 +56,24 @@ Build & run tests:
 make tests
 ./build_tests/test_runner
 ```
-_**TODO**: - Add parser tests_
+
+<p align="center">
+  <img src="resources/mEval_tests.png" alt="tests" width="700"/>
+</p>
+
+_TODO: Add parser tests_
 
 ## Usage
 Run the interpreter: Simply compile and run the program. It will prompt you for input.
 <p align="center">
-  <img src="resources/mEval_example_use.png" alt="mEval" width="700"/>
+  <img src="resources/mEval_example_use.png" alt="demo" width="700"/>
 </p>
 Exit: To exit the interpreter: use Ctrl+D
 
-
-
+## Helpful Resources:
+- https://www.savarese.org/articles/1998-2006/2001-05-Recursive_Descent_Parsing/index.pdf
+- https://craftinginterpreters.com/parsing-expressions.html
+- https://www.youtube.com/playlist?list=PLmG_3qmc10qQKLgP2H_d2BHHzD3RQWBE_
 ## License
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-### Resources I found helpful:
-- https://www.savarese.org/articles/1998-2006/2001-05-Recursive_Descent_Parsing/index.pdf
-- https://www.youtube.com/playlist?list=PLmG_3qmc10qQKLgP2H_d2BHHzD3RQWBE_
