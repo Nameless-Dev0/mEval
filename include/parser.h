@@ -8,11 +8,11 @@
 typedef struct parser{
     lexer_t* lexer;
     token_t* current_token;
-    ast_t* tree;
+    ast_node_t* tree;
 } parser_t;
 
-void init_parser(parser_t* parser, lexer_t* lexer);
-void generate_parser_AST(ast_t* tree, parser_t* parser);
-
+void parser_init(parser_t* parser, lexer_t* lexer);
+void generate_parser_AST(parser_t* parser);
+void parser_reset(parser_t* parser);
 
 #endif // PARSER_H
