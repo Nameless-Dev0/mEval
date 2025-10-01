@@ -64,7 +64,7 @@ make tests
 _TODO: Add parser tests_
 
 ## Usage
-Run the interpreter: Simply compile and run the program. It will prompt you for input.
+Run the interpreter: Simply build and run the program. It will prompt you for input.
 <p align="center">
   <img src="resources/mEval_example_use.png" alt="demo" width="700"/>
 </p>
