@@ -4,27 +4,6 @@
 #include <stdlib.h>
 #include <bsd/string.h>
 
-static ast_node_t* create_node(void);
-static ast_node_t* init_binary_node(ast_node_t* left, ast_node_t* right);
-static ast_node_t* init_unary_node(ast_node_t* right);
-
-void recursive_destroy_node(ast_node_t* node){
-    if(!node)
-        return;
-    recursive_destroy_node(node->left);
-    recursive_destroy_node(node->right);
-    free(node);
-}
-
-static ast_node_t* create_node(void){
-    ast_node_t* node = malloc(sizeof(ast_node_t));
-    if(!node){
-        fprintf(stderr, "fatal: node creation failed... exiting");
-        exit(EXIT_FAILURE);
-    }
-    return node;
-}
-
 static ast_node_t* init_binary_node(ast_node_t* left, ast_node_t* right){
     ast_node_t* node = create_node();
     node -> left = left;
@@ -39,23 +18,74 @@ static ast_node_t* init_unary_node(ast_node_t* right){
     return node;
 }
 
-void create_AST(ast_t* tree){
-    tree -> root = create_node();
-    tree -> root -> left = NULL;
-    tree -> root -> right = NULL;
+static void print_node_token(const token_t* token){
+    if(token->type == NUMBER){
+        printf("%lf", token->value);
+        return;
+    }
+
+    switch (token->type) {
+        case PLUS:
+            printf(" + ");
+            return;
+        case MINUS:
+            printf(" - ");
+            return;
+        case MULTIPLY:
+            printf(" * ");
+            return;
+        case DIVIDE:
+            printf(" / ");
+            return;
+        case POWER:
+            printf(" ^ ");
+            return;
+        case SIN:
+            printf(" sin ");
+            return;
+        case COS:
+            printf(" cos ");
+            return;
+        case TAN:
+            printf(" tan ");
+            return;
+        default:
+            printf("CONVERSION FAILED");
+            return;
+    }
 }
 
-void destroy_AST(ast_t* tree){
-    if(!tree)
+void show_parser_tree(const ast_node_t* root){ // left, root, right
+    if(!root)
         return;
-    recursive_destroy_node(tree->root);
-    tree->root = NULL;
-    free(tree);
+    show_parser_tree(root->left);
+    print_node_token(&(root->token)); // the token struct member stores the actual token not a pointer
+    show_parser_tree(root->right);
 }
+
+ast_node_t* create_node(void){
+    ast_node_t* node = malloc(sizeof(ast_node_t));
+    if(!node){
+        fprintf(stderr, "(ast) fatal error: node creation failed... exiting");
+        exit(EXIT_FAILURE);
+    }
+    node -> left = NULL;
+    node -> right = NULL;
+    return node;
+}
+
+void destroy_node(ast_node_t* root){
+    if(!root)
+        return;
+    destroy_node(root->left);
+    destroy_node(root->right);
+    free(root);
+}
+
 
 ast_node_t* create_number_node(const token_t* tok){
     if(!tok){
-        fprintf(stderr, "fatal: null token error... exiting");
+        fprintf(stderr, "(ast) fatal error: null token error... exiting");
         exit(EXIT_FAILURE);
     };
 
