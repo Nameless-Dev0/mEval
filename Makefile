@@ -1,6 +1,6 @@
 CC = gcc
 CFLAGS = -g -fsanitize=address -fno-omit-frame-pointer -O1 -Wall -Werror -Wextra -Iinclude
-LDFLAGS = -fsanitize=address
+LDFLAGS = -fsanitize=address -lm
 
 SRC = $(wildcard src/*.c)
 OBJ = $(patsubst src/%.c, build/bin/%.o, $(SRC))
