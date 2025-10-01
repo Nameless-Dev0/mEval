@@ -3,6 +3,7 @@
 #include "lexer.h"
 #include "token.h"
 #include <stdio.h>
+#include <stdlib.h>
 #include <stdbool.h>
 
 static ast_node_t* parse_expr(parser_t* parser);
@@ -14,15 +15,28 @@ static ast_node_t* parse_pow(parser_t* parser);
 static ast_node_t* parse_pow_prime(parser_t* parser, ast_node_t* left);
 static ast_node_t* parse_factor(parser_t* parser);
 
-void init_parser(parser_t* parser, lexer_t* lexer){
+void parser_init(parser_t* parser, lexer_t* lexer){
     parser->lexer = lexer;
     parser->current_token = lex_peek(lexer);
 }
 
-void generate_parser_AST(ast_t* tree, parser_t* parser){
-    create_AST(tree);
-    parser->tree = tree;
-    // Recursive calls starting point
+void generate_parser_AST(parser_t* parser){
+    parser->tree = parse_expr(parser);
+}
+
+void parser_reset(parser_t* parser){
+    if(!parser){
+        fprintf(stderr, "(parser) fatal error: null parser or tree... exiting\n");
+        exit(EXIT_FAILURE);
+    }
+
+    if(parser->tree){
+        destroy_node(parser->tree);
+        parser->tree = NULL;
+    }
+
+    parser->lexer = NULL;
+    parser->current_token = NULL;
 }
 
 // current_token is NULL if at end of token stream
@@ -49,7 +63,7 @@ static ast_node_t* parse_expr_prime(parser_t* parser, ast_node_t* left){
     next(parser);
     term = parse_term(parser);
     if(!term){
-        recursive_destroy_node(left);
+        destroy_node(left);
         return NULL;
     }
 
@@ -80,7 +94,7 @@ static ast_node_t* parse_term_prime(parser_t* parser, ast_node_t* left){
     next(parser);
     unary = parse_unary(parser);
     if(!unary){
-        recursive_destroy_node(left);
+        destroy_node(left);
         return NULL;
     }
 
@@ -117,7 +131,7 @@ static ast_node_t* parse_pow_prime(parser_t* parser, ast_node_t* left_factor){
     next(parser);
     right_factor = parse_pow(parser);
     if(!right_factor){
-        recursive_destroy_node(left_factor);
+        destroy_node(left_factor);
         return NULL;
     }
 
@@ -159,7 +173,7 @@ static ast_node_t* parse_factor(parser_t* parser){
 
         if((parser->current_token -> type != RPAREN)){
             fprintf(stderr, "syntax error: expected: ')'\n");
-            recursive_destroy_node(result);
+            destroy_node(result);
             return NULL;
         }
 
@@ -174,7 +188,7 @@ static ast_node_t* parse_factor(parser_t* parser){
 
         if((parser->current_token -> type != RPAREN)){
             fprintf(stderr, "syntax error: expected: ')'\n");
-            recursive_destroy_node(result);
+            destroy_node(result);
             return NULL;
         }
 
