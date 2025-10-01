@@ -96,5 +96,5 @@ build_tests/
 # Ignore todo file
 TODO.txt
 
-# Ignore resources file
-resources/
+# Ignore my_notes file
+resources/my_notes
