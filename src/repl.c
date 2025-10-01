@@ -7,8 +7,10 @@
 
 #include "repl.h"
 #include "lexer.h"
-#include "tok_stream.h" // keeping it for now to display token stream 
 #include "lex_limits.h"
+#include "ast.h"
+#include "parser.h"
+#include "eval.h"
 
 static void show_start(void){
     printf("Welcome to mEval, (Ctrl+D to exit):\n");
@@ -37,16 +39,22 @@ void repl_loop(void){
             line[read_size - 1] = '\0';
         
         lexer_t lexer;
+        parser_t parser;
+        double result;
+
         lexer_init(&lexer, line);
         lex_expression(&lexer);
 
-        print_stream(lexer.stream);
+        parser_init(&parser, &lexer);
+        generate_parser_AST(&parser);
 
-        // TODO: parse
-        // evaluate
-
-        lexer_reset(&lexer);
+        //show_parser_tree(parse_tree.root);
+        result = evaluate_AST(parser.tree);
+        printf("%lf\n", result);
         
+        parser_reset(&parser);
+        lexer_reset(&lexer);
+
         show_indicator();
     }
 
