@@ -1,0 +1,49 @@
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage[a5paper,margin=1.5cm]{geometry}
+
+\begin{document}
+
+\begin{center}
+\[
+\begin{array}{@{}l l@{}}
+\text{expr }   &\rightarrow \text{ term expr'} \\
+\text{expr'}   &\rightarrow (\text{PLUS} \mid \text{MINUS})\ \text{ term expr'} \\
+\text{expr'}   &\rightarrow \epsilon
+\end{array}
+\]
+
+\[
+\begin{array}{@{}l l@{}}
+\text{term }   &\rightarrow \text{ unary term'} \\
+\text{term'}   &\rightarrow (\text{TIMES} \mid \text{DIVIDE})\ \text{ unary term'} \\
+\text{term'}   &\rightarrow \epsilon
+\end{array}
+\]
+
+\[
+\begin{array}{@{}l l@{}}
+\text{unary}   &\rightarrow (\text{PLUS} \mid \text{MINUS})\ \text{ pow} \\
+\text{unary}   &\rightarrow \text{ pow}
+\end{array}
+\]
+
+\[
+\begin{array}{@{}l l@{}}
+\text{pow }    &\rightarrow \text{ factor pow'} \\
+\text{pow'}    &\rightarrow \text{ POWER factor pow'} \\
+\text{pow'}    &\rightarrow \epsilon
+\end{array}
+\]
+
+\[
+\begin{array}{@{}l l@{}}
+\text{factor} &\rightarrow (\text{SIN} \mid \text{COS} \mid \text{TAN})\ \text{ (LPAREN) expr (RPAREN)} \\
+\text{factor}  &\rightarrow \text{ (LPAREN) expr (RPAREN)} \\
+\text{factor}  &\rightarrow \text{ NUMBER}
+\end{array}
+\]
+
+\end{center}
+
+\end{document}
