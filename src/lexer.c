@@ -130,7 +130,6 @@ void lex_expression(lexer_t* lexer){
     }
 
     while(!is_at_end(lexer)){
-
         while(peek(lexer) == ' ')
             advance(lexer);
         if (is_at_end(lexer))
@@ -144,10 +143,18 @@ void lex_expression(lexer_t* lexer){
             token = tokenize_symbol(lexer);
         if(!token)
             token = tokenize_math_func(lexer);
-        if (!token){
-            char unknown_symbol[2] = {peek(lexer),'\0'};
-            token = create_token(UNKNOWN, unknown_symbol);
+        
+        size_t unknown_string_size = 0;
+        char unknown_symbol[MAX_LEXEME_LENGTH];
+        while(!token && unknown_string_size < MAX_LEXEME_LENGTH - 1 && peek(lexer) != '\0' && peek(lexer) != ' '){
+            unknown_symbol[unknown_string_size] = peek(lexer);
             advance(lexer);
+            unknown_string_size++;
+        }
+
+        if(unknown_string_size != 0){
+            unknown_symbol[unknown_string_size] = '\0';
+            token = create_token(UNKNOWN, unknown_symbol);
         }
 
         status = stream_append_token(lexer->stream, token);
