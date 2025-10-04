@@ -161,6 +161,11 @@ static ast_node_t* parse_factor(parser_t* parser){
     ast_node_t* result = NULL;
     token_type_t type = parser -> current_token -> type;
     
+    if(type == UNKNOWN){
+        fprintf(stderr, "unknown token: '%s'\n", parser->current_token->lexeme);
+        return NULL;
+    }
+
     if(type == SIN ||type == COS  ||type == TAN){
         next(parser);
         if(parser->current_token->type != LPAREN){
