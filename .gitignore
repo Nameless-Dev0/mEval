@@ -88,10 +88,9 @@ dkms.conf
 .ionide
 
 # Ignore build artifacts
-build/
-
-# Ignore test builds
+build_default
 build_tests/
+build_benchmarks/
 
 # Ignore todo file
 TODO.txt
