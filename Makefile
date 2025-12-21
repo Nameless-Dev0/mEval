@@ -1,42 +1,67 @@
 CC = gcc
 CFLAGS = -g -fsanitize=address -fno-omit-frame-pointer -O1 -Wall -Werror -Wextra -Iinclude
-LDFLAGS = -fsanitize=address -lm
+CFLAGS_B = -g -O0 -Wall -Wextra -Iinclude
+LDFLAGS = -lm -fsanitize=address
 
 SRC = $(wildcard src/*.c)
-OBJ = $(patsubst src/%.c, build/bin/%.o, $(SRC))
-HEADER = $(wildcard include/*.h)
-TARGET = build/mEval
-
 SRC_NO_MAIN = $(filter-out src/main.c, $(SRC))
-OBJ_NO_MAIN = $(patsubst src/%.c, build/bin/%.o, $(SRC_NO_MAIN))
+HEADER = $(wildcard include/*.h)
+
+OBJ = $(patsubst src/%.c, build/default/bin/%.o, $(SRC))
+TARGET = build/default/mEval
 
 TEST_SRC = $(wildcard tests/*.c)
-TEST_OBJ = $(patsubst tests/%.c, build_tests/bin/%.o, $(TEST_SRC))
-TEST_TARGET = build_tests/test_runner
+TEST_OBJ = $(patsubst tests/%.c, build/tests/bin/%.o, $(TEST_SRC))
+TEST_SRC_NO_MAIN = $(filter-out src/main.c, $(SRC))
+TEST_CORE_OBJ = $(patsubst src/%.c, build/tests/bin/%.o, $(TEST_SRC_NO_MAIN))
+TEST_TARGET = build/tests/test_runner
 
-.PHONY: all clean tests
+BENCHMARK_SRC = $(wildcard benchmarks/*.c)
+BENCHMARK_CORE_OBJ = $(patsubst src/%.c, build/benchmarks/bin/%.o, $(SRC_NO_MAIN))
+BENCHMARK_OBJ = $(patsubst benchmarks/%.c, build/benchmarks/bin/%.o, $(BENCHMARK_SRC))
+BENCHMARK_TARGET = build/benchmarks/benchmarks
+
+.PHONY: all clean tests benchmarks
+
 
 all: $(TARGET)
 
 $(TARGET): $(OBJ)
+	@mkdir -p $(dir $@)
 	$(CC) $(OBJ) -o $@ $(LDFLAGS)
 
-build/bin/%.o: src/%.c $(HEADER)
+build/default/bin/%.o: src/%.c $(HEADER)
 	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) -c $< -o $@
-
 
 tests: $(TEST_TARGET)
 
-$(TEST_TARGET): $(OBJ_NO_MAIN) $(TEST_OBJ)
+$(TEST_TARGET): $(TEST_CORE_OBJ) $(TEST_OBJ)
 	@mkdir -p $(dir $@)
-	$(CC) $(OBJ_NO_MAIN) $(TEST_OBJ) -o $@ $(LDFLAGS)
+	$(CC) $(CFLAGS) $(TEST_CORE_OBJ) $(TEST_OBJ) -o $@ $(LDFLAGS)
 
-build_tests/bin/%.o: tests/%.c $(HEADER)
+build/tests/bin/%.o: src/%.c $(HEADER)
 	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) -c $< -o $@
 
-clean:
-	rm -rf build/* build_tests/*
+build/tests/bin/%.o: tests/%.c $(HEADER)
+	@mkdir -p $(dir $@)
+	$(CC) $(CFLAGS) -c $< -o $@
 
--include $(DEP)
+
+benchmarks: $(BENCHMARK_TARGET)
+
+$(BENCHMARK_TARGET): $(BENCHMARK_CORE_OBJ) $(BENCHMARK_OBJ)
+	@mkdir -p $(dir $@)
+	$(CC) $(CFLAGS_B) $(BENCHMARK_CORE_OBJ) $(BENCHMARK_OBJ) -o $@ $(LDFLAGS)
+
+build/benchmarks/bin/%.o: src/%.c $(HEADER)
+	@mkdir -p $(dir $@)
+	$(CC) $(CFLAGS_B) -c $< -o $@
+
+build/benchmarks/bin/%.o: benchmarks/%.c $(HEADER)
+	@mkdir -p $(dir $@)
+	$(CC) $(CFLAGS_B) -c $< -o $@
+
+clean:
+	rm -rf build/*
