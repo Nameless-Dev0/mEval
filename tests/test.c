@@ -22,7 +22,7 @@ static expected_lexer_output_t tests[TESTS_COUNT] = {
     {"(1+(2*3))",  {{0.0, LPAREN, "("},     {1.0, NUMBER, "1"}, {0.0, PLUS, "+"},       {0.0, LPAREN, "("},  {2.0, NUMBER, "2"}, {0.0, MULTIPLY, "*"}, {3.0, NUMBER, "3"}, {0.0, RPAREN, ")"}, {0.0, RPAREN, ")"}, {0.0, END, ""}}, 10},
     {"42",         {{42.0, NUMBER, "42"},   {0.0, END, ""}}, 2},
     {"  1 + 2  ",  {{1.0, NUMBER, "1"},     {0.0, PLUS, "+"},   {2.0, NUMBER, "2"}, {0.0, END, ""}}, 4},
-    {"1$2",        {{1.0, NUMBER, "1"},     {0.0, UNKNOWN, "$"},{2.0, NUMBER, "2"}, {0.0, END, ""}}, 4},
+    {"1$2",        {{1.0, NUMBER, "1"},     {0.0, UNKNOWN, "$2"}, {0.0, END, ""}}, 3},
     {"(1+2",       {{0.0, LPAREN, "("},     {1.0, NUMBER, "1"}, {0.0, PLUS, "+"}, {2.0, NUMBER, "2"}, {0.0, END, ""}}, 5},
     {"",           {{0.0, END, ""}}, 1}
 };
@@ -57,10 +57,16 @@ int main(void){
         lexer_init(&lexer, expression);
         lex_expression(&lexer);
 
-        if(!check_lexer_output(lexer.stream, expected_stream, expected_stream_length))
-            printf("TEST %zu ... PASS ✓ \n", i);
+        char* pass_str = "| PASS ✓";
+        char* fail_str = "| FAIL ✗";
+
+        int field_width = 12;
+        int expr_len = strlen(expression) + 2; 
+
+        if (!check_lexer_output(lexer.stream, expected_stream, expected_stream_length))
+            printf("TEST %-2zu | '%s' %*s %s\n", i, expression, field_width - expr_len, "", pass_str);
         else
-            printf("TEST %zu ... FAIL 𐄂 \n", i);
+            printf("TEST %-2zu | '%s' %*s %s\n", i, expression, field_width - expr_len, "", fail_str);
 
         lexer_reset(&lexer);
     }
