@@ -7,6 +7,7 @@
 
 #include "repl.h"
 #include "lexer.h"
+#include "tok_stream.h"
 #include "lex_limits.h"
 #include "ast.h"
 #include "parser.h"
@@ -47,10 +48,10 @@ void repl_loop(void){
 
         parser_init(&parser, &lexer);
         generate_parser_AST(&parser);
-
-        //show_parser_tree(parse_tree.root);
+        
+        //print_stream(lexer.stream);
         result = evaluate_AST(parser.tree);
-        printf("%lf\n", result);
+        printf("result: %lf\n", result);
         
         parser_reset(&parser);
         lexer_reset(&lexer);
